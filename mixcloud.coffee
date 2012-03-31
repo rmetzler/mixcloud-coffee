@@ -90,7 +90,7 @@ do_nothing = (obj) ->
   # do nothing
 
 print = (obj) ->
-  puts JSON.stringify obj
+  puts JSON.stringify obj, null, "  "
 
 
 ###
