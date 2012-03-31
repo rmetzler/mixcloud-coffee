@@ -1,3 +1,20 @@
+###
+
+This is an API wrapper for the mixcloud.com API written in CoffeeScript
+
+http://www.mixcloud.com/developers/documentation/
+
+# TODOs
+- write README.md
+- put wrapper functions in a class and create them with splats
+- isolate tests
+- make NPM package
+
+
+copyright @rmetzler
+MIT license
+###
+
 http = require 'http'
 puts = require('util').puts
 
@@ -25,7 +42,8 @@ get = (path, handler) ->
       #puts 'end'
       obj = JSON.parse(data)
       
-      handler(obj) #if handler
+      # if here is an exeption, check if your handler exists
+      handler(obj)
 
 ###
 # API methods
@@ -60,6 +78,9 @@ get_popular = (handler) ->
 get_hot = (handler) ->
   get "/popular/hot/", handler
 
+get_new = (handler) ->
+  get "/new/", handler
+
 ###
 # Handler
 ###
@@ -72,17 +93,27 @@ print = (obj) ->
   puts JSON.stringify obj
 
 
+###
+# Test Code
+###
 
-# print = do_nothing
+#print = do_nothing
 
+###
 # these are examples from the API docs
+###
+
 # get_cloudcast 'spartacus', 'party-time', print
 # get_user 'spartacus', print
 # get_tag 'funk', print
 # get_artist 'aphex-twin', print
 # get_track 'michael-jackson','everybody', print
 # get_category 'ambient', print
-# 
+
+###
+# my examples
+###
+ 
 # get_user 'rmetzler', print
 # get_user_meta 'rmetzler', print
 # get_favourites 'rmetzler', print
@@ -90,4 +121,5 @@ print = (obj) ->
 # get_popular print
 # get_hot print
 
+get_new print
 
