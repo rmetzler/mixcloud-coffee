@@ -116,10 +116,11 @@ print = (obj) ->
  
 # get_user 'rmetzler', print
 # get_user_meta 'rmetzler', print
-# get_favourites 'rmetzler', print
 # 
+# get_favourites 'rmetzler', print
 # get_popular print
 # get_hot print
+# get_new print
 
-get_new print
-
+# get_hot ->
+  
