@@ -3,19 +3,18 @@ puts = require('util').puts
 
 
 host = 'api.mixcloud.com'
-base_url = "http://#{host}"
-cloudcast_url=''
-tag_url=''
-track_url=''
-category_url=''
 
-get = (path, fun) ->
+###
+# make a http request and
+# call handler with the response data
+###
+get = (path, handler) ->
   options = 
     host: host
     port: 80
     path: path
   
-  puts "GET #{host}/#{path}"
+  #puts "GET #{host}#{path} -> #{handler}"
   http.get options, (resp) ->
     #console.log("Response: #{resp.statusCode}")
     data = ""
@@ -24,45 +23,59 @@ get = (path, fun) ->
       data += chunk
     resp.on 'end', ->
       #puts 'end'
-      fun(JSON.parse(data))
+      obj = JSON.parse(data)
+      
+      handler(obj) #if handler
+
+###
+# API methods
+###
+get_user = (user, handler) ->
+  get "/#{user}/", handler
+
+get_user_meta = (user, handler) ->
+  get "/#{user}/?metadata=1", handler
+  
+get_favourites = (user, handler) ->
+  get "/#{user}/favorites/", handler  
+
+get_cloudcast = (user, cloudcast, handler) ->
+  get "/#{user}/#{cloudcast}/", handler
+
+get_tag = (tag, handler) ->
+  get "/tag/#{tag}/", handler
+
+get_artist = (artist, handler) ->
+  get "/artist/#{artist}/", handler
+
+get_track = (artist, track, handler) ->
+  get "/track/#{artist}/#{track}/", handler
+
+get_category = (category, handler) ->
+  get "/categories/#{category}/", handler
+
+get_popular = (handler) ->
+  get "/popular/", handler
+
+get_hot = (handler) ->
+  get "/popular/hot/", handler
+
+###
+# Handler
+###
+
+do_nothing = (obj) ->
+  puts "do nothing"
+  # do nothing
 
 print = (obj) ->
   puts JSON.stringify obj
 
-get_user = (user, fun) ->
-  get "/#{user}/", fun
-
-get_user_meta = (user, fun) ->
-  get "/#{user}/?metadata=1", fun
-  
-
-get_favourites = (user, fun) ->
-  get "/#{user}/favorites/"  
 
 
-get_cloudcast = (user, cloudcast, fun) ->
-  get "/#{user}/#{cloudcast}/", fun
+# print = do_nothing
 
-get_tag = (tag, fun) ->
-  get "/tag/#{tag}/", fun
-
-get_artist = (artist, fun) ->
-  get "/artist/#{artist}/", fun
-
-get_track = (artist, track, fun) ->
-  get "/track/#{artist}/#{track}/", fun
-
-get_category = (category, fun) ->
-  get "/categories/#{category}/", fun
-
-get_popular = (fun) ->
-  get "/popular/", fun
-
-get_hot = (fun) ->
-  get "/popular/hot/", fun
-
-
-
+# these are examples from the API docs
 # get_cloudcast 'spartacus', 'party-time', print
 # get_user 'spartacus', print
 # get_tag 'funk', print
@@ -70,15 +83,11 @@ get_hot = (fun) ->
 # get_track 'michael-jackson','everybody', print
 # get_category 'ambient', print
 # 
-# puts ''
-# puts '-----------'
-# puts ''
-
-#get_user 'rmetzler', print
-#get_user_meta 'rmetzler', print
-
-# Doesn't work :(
+# get_user 'rmetzler', print
+# get_user_meta 'rmetzler', print
 # get_favourites 'rmetzler', print
+# 
+# get_popular print
+# get_hot print
 
-#get_popular print
-#get_hot print
+
